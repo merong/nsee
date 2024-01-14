@@ -1,0 +1,13 @@
+@charset "utf-8";
+
+/* widget-miso-choice-icon */
+.widget-miso-choice-icon { overflow:hidden; }
+.widget-miso-choice-icon ul { margin:0px; padding:0px; list-style:none; }
+.widget-miso-choice-icon li { padding-bottom:8px; border-bottom:1px solid #eee; margin-bottom:7px; }
+.widget-miso-choice-icon li:last-child { padding-bottom:0px; border-bottom:0; margin-bottom:0px; }
+.widget-miso-choice-icon li .media { padding:0; margin:0; }
+.widget-miso-choice-icon li .fix-icon i { background:#f5f5f5; color:#bbb; }
+.widget-miso-choice-icon li strong { line-height:20px; margin:0px; padding-top:4px; font-weight:normal; }
+.widget-miso-choice-icon li .details { padding:3px 0px 0px; font-size:13px; color:#aaa; line-height:20px; }
+.widget-miso-choice-icon li .sp { margin-right:15px; }
+.widget-miso-choice-icon li.item-none { padding:50px 10px; }

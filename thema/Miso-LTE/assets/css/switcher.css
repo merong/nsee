@@ -1,0 +1,18 @@
+@charset "UTF-8";
+
+#style-switcher { position:fixed; right: -206px; top: 50px; width: 205px; z-index: 3333; box-shadow: -3px 3px 6px rgba(0,0,0,0.08); background-color: rgb(255, 255, 255); }
+#style-switcher label { cursor:pointer; }
+#style-switcher .switcher-title { color: rgb(255, 255, 255); background-color: rgb(55, 55, 55); margin: 0px; margin-left:-1px; padding: 0px 0px 0px 15px; line-height: 40px; font-family: "Roboto",Helvetica,Arial,sans-serif; font-size: 16px; font-weight: bold; }
+#style-switcher .switcher-wrap { background:#fff; }
+#style-switcher .switcher-content { padding:15px; padding-right:20px; }
+#style-switcher .switcher-icon { color: rgb(255, 255, 255); background-color: rgb(55, 55, 55); border-radius: 3px 0px 0px 3px; width: 44px; height: 40px; text-align: center; left:-44px; line-height:40px; font-size: 22px; text-decoration: none; display: block; position: absolute; }
+#style-switcher .switcher-item { cursor:pointer; margin-bottom:8px; }
+/*
+#style-switcher .layout-setup { top: 40px; z-index:1; }
+#style-switcher .widget-setup { top: 85px; z-index:1; }
+*/
+#style-switcher .input-bottom { margin-bottom:8px; }
+#style-switcher .panel-group { margin:0px 0px 5px; }
+#style-switcher .panel { padding:0px; margin:0px; }
+#style-switcher .panel-heading { font-weight:bold; padding:0px 0px 8px; }
+#style-switcher .panel-body { padding:8px 0px 12px; }

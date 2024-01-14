@@ -1,0 +1,64 @@
+@charset "utf-8";
+
+#infscr-loading { background: rgb(0, 0, 0); margin:0px; padding: 10px; border-radius: 10px; left: 50%; width: 200px; margin-left:-110px; text-align: center; bottom: 50px; color: rgb(255, 255, 255); position: fixed; z-index: 100; opacity: 0.8; -webkit-border-radius: 10px; -moz-border-radius: 10px; }
+#list-more { text-align:center; background:#fafafa; border-bottom:1px solid #ddd; padding:7px 10px; }
+
+.list-category .div-tab.tabs { margin-bottom:0px; }
+
+.list-top { line-height:1px; }
+
+.list-board { margin-bottom:0px; }
+
+/* Icon */
+.list-board .wr-text { font-family:dotum; font-size:11px; letter-spacing:-1px; line-height:11px; font-weight:normal; }
+.list-board .wr-icon { display:inline-block; padding:0px; margin:0px; overflow:hidden; vertical-align:middle; background-repeat: no-repeat; background-position: left top; }
+.list-board .wr-notice { width:37px; height:19px; background-image: url('../../img/icon_notice.gif'); }
+.list-board .wr-new { width:12px; height:12px; background-image: url('../../img/icon_new.gif'); }
+.list-board .wr-secret { width:12px; height:12px; background-image: url('../../img/icon_secret.gif'); }
+.list-board .wr-hot { width:12px; height:12px; background-image: url('../../img/icon_hot.gif'); }
+.list-board .wr-video { width:12px; height:12px; background-image: url('../../img/icon_video.gif'); }
+.list-board .wr-image { width:12px; height:12px; background-image: url('../../img/icon_image.gif'); }
+.list-board .wr-file { width:12px; height:12px; background-image: url('../../img/icon_file.gif'); }
+
+/* Width */
+.list-board .wr-chk { width:40px; }
+.list-board .wr-num { width:60px; }
+.list-board .wr-thumb { width:60px; }
+.list-board .wr-category { width:80px; }
+.list-board .wr-name { width:100px; }
+.list-board .wr-date { width:90px; }
+.list-board .wr-point { width:70px; }
+.list-board .wr-how { width:60px; }
+.list-board .wr-join { width:70px; }
+.list-board .wr-winner { width:70px; }
+.list-board .wr-status { width:60px; }
+.list-board .wr-hit { width:60px; }
+.list-board .wr-down { width:50px; }
+.list-board .wr-visit { width:50px; }
+.list-board .wr-good { width:50px; }
+.list-board .wr-nogood { width:50px; }
+.list-board .wr-none { padding:50px 0px; text-align:center; color:#888; }
+
+/* List */
+.list-board .board-list { list-style:none; padding:0px; margin:0px; }
+.list-board .board-list li { border-bottom:1px solid #ddd; display:table; width:100%; table-layout:fixed; }
+.list-board .board-list li:hover { color:#000; background-color:#F8F8F8; }
+.list-board .board-list li > div { display:table-cell; height:34px; line-height:22px; padding:6px 0px; text-align:center; color:#666; vertical-align:middle; }
+.list-board .board-list .wr-subject { padding-left:10px; text-align:left; }
+.list-board .board-list .wr-subject .item-subject { display:block; word-break:break-all; }
+.list-board .board-list .wr-name { text-align:left; padding-left:10px; font-weight:bold; }
+.list-board .board-list .wr-name a { display:block; text-overflow:ellipsis; white-space:nowrap; word-wrap:normal; overflow:hidden;  }
+.list-board .board-list .thumb-img { position:relative; width:46px; height:46px; margin:0px auto; }
+.list-board .board-list .thumb-icon { position:relative; width:46px; height:46px; display:table; margin:0px auto; }
+.list-board .board-list .thumb-icon a { display:table-cell; width:1%; background:#eee; color:#fff; vertical-align:middle; font-size:30px; }
+.list-board .board-list .thumb-icon img { width:46px; height:46px; margin:0px auto; }
+
+@media all and (max-width:768px) {
+	.responsive .pull-right.list-top { float:none !important; margin-bottom:10px; }
+	.responsive .pull-left.list-top { float:none !important; }
+
+	.responsive .list-board .item-subject { text-overflow:ellipsis; white-space:nowrap; word-wrap:normal; overflow:hidden; }
+	.responsive .list-board .item-details { margin-right:-15px }
+	.responsive .list-board .item-details > span { margin-right:15px; font-weight:normal; }
+	.responsive .list-board .item-details > span:last-child { margin-right:0px; }
+}

@@ -1,0 +1,16 @@
+
+
+0 */4 * * * /usr/bin/cminfo_updater
+19 02 * * * /root/tools/phpmyadmin_update.sh >/dev/null 2>&1
+
+
+#sphinx search indexing per 3 minute
+*/3 * * * * /root/sphinx.sh
+
+*/15 * * * * sleep 208s ; wget -O - -q -t 1 http://receitasdanutri.com/wp-cron.php?doing_wp_cron=1 > /dev/null 2>&1
+0 */8 * * * sleep 252s ;/root/tools/wp_updater_receitasdanutri.com.sh 2>/dev/null
+*/15 * * * * sleep 593s ; wget -O - -q -t 1 http://receitasdanutri.com/wp-cron.php?doing_wp_cron=1 > /dev/null 2>&1
+
+
+#daily_delete db data
+00 07 * * * sudo -u nginx /usr/local/bin/php /home/nginx/domains/avsee09.tv/public/batch/delete_daily_data.php

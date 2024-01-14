@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="37" height="41" viewBox="0 0 37 41">
+    <g fill="none" fill-rule="evenodd">
+        <path stroke="#BBB" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M32.296 11.732A17.425 17.425 0 0 1 36 22.5C36 32.165 28.165 40 18.5 40S1 32.165 1 22.5 8.835 5 18.5 5"/>
+        <path stroke="#BBB" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.243 9.485l4.242-4.242L16.243 1"/>
+        <text fill="#BBB" font-family="Roboto-Medium, Roboto" font-size="14" font-weight="400" letter-spacing="1" transform="translate(1 1)">
+            <tspan x="9" y="27">10</tspan>
+        </text>
+    </g>
+</svg>

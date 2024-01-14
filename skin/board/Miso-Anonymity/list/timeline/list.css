@@ -1,0 +1,17 @@
+@charset "utf-8";
+
+/* List */
+.list-item .list-content { position:relative; overflow:hidden; }
+.list-item .list-media { overflow:hidden; }
+.list-item .list-media .timeline-img { width:100%; height:auto; display:block; }
+.list-item h2.timeline-heading { display:block; font-size:16px; line-height:22px; margin:0px; padding:0px 0px 6px; }
+.list-item h2.timeline-heading a { font-weight:normal; }
+.list-item .list-sp { margin:0 5px; color:#ddd; font-size:10px; }
+.list-item .timeline-info { margin-top:12px; }
+.list-item .timeline-icon img, .list-item .timeline-icon i { border-color: transparent !important;}
+
+/* Infinite */
+.list-wrap #infscr-loading { background: rgb(0, 0, 0); margin:0px; padding: 10px; border-radius: 10px; left: 50%; width: 200px; margin-left:-110px; text-align: center; bottom: 50px; color: rgb(255, 255, 255); position: fixed; z-index: 100; opacity: 0.8; -webkit-border-radius: 10px; -moz-border-radius: 10px; }
+.list-wrap .list-more { text-align:center; margin-bottom:20px; }
+.list-wrap .list-more a { color:#ddd; font-size:60px; }
+.list-wrap .list-top { line-height:1px; }

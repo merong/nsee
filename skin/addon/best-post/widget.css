@@ -1,0 +1,11 @@
+@charset "utf-8";
+
+/* best-post-addon */
+.best-post-addon { margin-bottom:20px; padding: 0 15px; }
+.best-post-addon .row { margin-left:-10px; margin-right:-10px; }
+.best-post-addon .col { padding-left:10px; padding-right:10px; }
+.best-post-addon ul { padding:0px; margin:0px; line-height:22px; list-style:none; }
+.best-post-addon li { margin:0; padding:0px; }
+.best-post-addon li a { margin:0; padding:0px; display:block; text-overflow:ellipsis; white-space:nowrap; word-wrap:normal; overflow:hidden; }
+.best-post-addon li a:hover { color:crimson; font-weight:normal; }
+.best-post-addon .btn-wset { padding:0 0 15px; }
