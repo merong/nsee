@@ -1,6 +1,11 @@
 <?php
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 
+include_once(G5_LIB_PATH.'/SphinxSearch.class.php');
+
+$use_sphinx = false;
+
+
 // 분류 사용 여부
 $is_category = false;
 $category_option = '';
@@ -38,6 +43,21 @@ $is_search_bbs = false;
 
 if ($sca || $stx || $stx === '0') {     //검색이면
     $is_search_bbs = true;      //검색구분변수 true 지정
+
+    //제목이나 본문검색인 경우에만 sphinx 검색을 사용하도록 함.(카테고리만 선택한 경우도 추가)
+    if(($stx && (strpos($sfl, "wr_subject") !== FALSE  ||  strpos($sfl, "wr_content") !== FALSE)) || $sca) {
+        try {
+            $sphinx = new SphinxSearch("", $write_table);
+            $use_sphinx = true;
+        } catch (Exception $e) {
+            $use_sphinx = false;
+        }
+    }
+
+    if($use_sphinx && $sphinx->is_indexed_table($write_table)) {
+        $sphinx->set_sql_search($sca, $sfl, $stx, $sop);
+        $total_count = $sphinx->get_total_count($write_table);
+    } else {
     $sql_search = get_sql_search($sca, $sfl, $stx, $sop);
 
 	// 가장 작은 번호를 얻어서 변수에 저장 (하단의 페이징에서 사용)
@@ -53,7 +73,7 @@ if ($sca || $stx || $stx === '0') {     //검색이면
 
     // 원글만 얻는다. (코멘트의 내용도 검색하기 위함)
     // 라엘님 제안 코드로 대체 http://sir.kr/g5_bug/2922
-    $sql = " SELECT COUNT(DISTINCT `wr_parent`) AS `cnt` FROM {$write_table} WHERE {$sql_search} ";
+        $sql = " SELECT /* list.php */ COUNT(DISTINCT `wr_parent`) AS `cnt` FROM {$write_table} WHERE {$sql_search} ";
     $row = sql_fetch($sql);
     $total_count = $row['cnt'];
     /*
@@ -61,6 +81,7 @@ if ($sca || $stx || $stx === '0') {     //검색이면
     $result = sql_query($sql);
     $total_count = sql_num_rows($result);
     */
+    }
 } else {
     $sql_search = "";
     $total_count = $board['bo_count_write'];
@@ -97,7 +118,7 @@ if (!$stx) {
 
         $row = sql_fetch(" select * from {$write_table} where wr_id = '{$arr_notice[$k]}' ");
 
-		if (!isset($row['wr_id']) || !$row['wr_id']) continue;
+        if (!$row['wr_id']) continue;
 
 		// 분류일 때
 		if($sca) {
@@ -156,7 +177,7 @@ if (!$sst) {
     if ($board['bo_sort_field']) {
         $sst = $board['bo_sort_field'];
     } else {
-        $sst  = "wr_num, wr_reply";
+        $sst  = "wr_num asc";
         $sod = "";
     }
 } else {
@@ -167,33 +188,67 @@ if (!$sst) {
 }
 
 if(!$sst)
-    $sst  = "wr_num, wr_reply";
+    $sst  = "wr_num asc";
 
 if ($sst) {
     $sql_order = " order by {$sql_apms_orderby} {$sst} {$sod} ";
 }
 
 if ($is_search_bbs) {
+
+    if($use_sphinx && $sphinx->is_indexed_table($write_table)) {
+
+    } else {
     $sql = " select distinct wr_parent from {$write_table} where {$sql_search} {$sql_order} limit {$from_record}, $page_rows ";
+        if($bo_table == "javc") {
+            syslog(LOG_INFO, __FILE__." ".__LINE__." sql=".$sql);
+        }
+    }
 } else {
-    $sql = " select * from {$write_table} where wr_is_comment = 0 {$sql_apms_where} ";
+    $sql = " select /* list.php */ * from {$write_table} where wr_is_comment = 0 {$sql_apms_where} ";
     if(!$is_notice_list && $notice_count)
         $sql .= " and wr_id not in (".implode(', ', $arr_notice).") ";
     $sql .= " {$sql_order} limit {$from_record}, $page_rows ";
+
+    if($bo_table == "javc") {
+        //syslog(LOG_INFO, __FILE__." ".__LINE__." sql=".$sql);
+    }
 }
 
 // 페이지의 공지개수가 목록수 보다 작을 때만 실행
 $k = 0;
 if($page_rows > 0) {
+
+    $wr_list = array();
+
+    if($use_sphinx && $sphinx->is_indexed_table($write_table)) {
+        $sphinx->search($write_table, $sql_order, $from_record, $page_rows);
+        $wr_list = $sphinx->get_items();
+    } else {
+    $result = sql_query($sql);
+        while ($row = sql_fetch_array($result)) {
+            $wr_list[] = $row;
+        }
+    }
+
     $result = sql_query($sql);
 
-    while ($row = sql_fetch_array($result))
-    {
+    foreach($wr_list as $row ) {
+        // 검색
         // 검색일 경우 wr_id만 얻었으므로 다시 한행을 얻는다
         if ($sca || $stx)
             $row = sql_fetch(" select * from {$write_table} where wr_id = '{$row['wr_parent']}' ");
 
-        $list[$i] = get_list($row, $board, $board_skin_url, G5_IS_MOBILE ? $board['bo_mobile_subject_len'] : $board['bo_subject_len']);
+
+        $crow = get_list($row, $board, $board_skin_url, G5_IS_MOBILE ? $board['bo_mobile_subject_len'] : $board['bo_subject_len']);
+        //$list[$i] = get_list($row, $board, $board_skin_url, G5_IS_MOBILE ? $board['bo_mobile_subject_len'] : $board['bo_subject_len']);
+
+        if($crow['wr_id']) {
+            $list[$i] = $crow;
+        } else {
+            //syslog(__FILE__." ".__LINE__." row=".json_encode($row));
+        }
+
         if (strstr($sfl, 'subject')) {
             $list[$i]['subject'] = search_font($stx, $list[$i]['subject']);
         }

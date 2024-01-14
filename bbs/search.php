@@ -1,6 +1,9 @@
 <?php
 include_once('./_common.php');
 
+include_once(G5_LIB_PATH.'/SphinxSearch.class.php');
+$use_sphinx = false;
+
 $tmp_gr_id = $gr_id;
 
 if(!$sfl) $sfl = 'wr_subject||wr_content';
@@ -108,6 +111,16 @@ if ($stx) {
     // 검색필드를 구분자로 나눈다. 여기서는 +
     $field = explode('||', trim($sfl));
 
+    if($stx && (strpos($sfl, "wr_subject") !== FALSE  ||  strpos($sfl, "wr_content") !== FALSE)) {
+
+        try {
+            $sphinx = new SphinxSearch("192.168.100.189");
+            $use_sphinx = true;
+        } catch (Exception $e) {
+            $use_sphinx = false;
+        }
+    }
+
     $str = '(';
     for ($i=0; $i<count($s); $i++) {
         if (trim($s[$i]) == '') continue;
@@ -150,6 +163,7 @@ if ($stx) {
     $str .= ")";
 
     $sql_search = $str;
+    $sql_search .= " and wr_is_comment = 0 ";
 
     $str_board_list = "";
     $board_count = 0;
@@ -165,9 +179,15 @@ if ($stx) {
         //$result = sql_query($sql, false);
         //$row['cnt'] = @sql_num_rows($result);
 
+        if($use_sphinx && $sphinx->is_indexed_table($tmp_write_table)) {
+            $sphinx->set_sql_search("", $sfl, $stx, $sop);
+            $cnt = $sphinx->get_total_count($tmp_write_table);
+            $row  = array('cnt' => $cnt);
+        } else {
         $sql = " select count(wr_id) as cnt from {$tmp_write_table} where {$sql_search} ";
         $result = sql_fetch($sql, false);
         $row['cnt'] = (int)$result['cnt'];
+        }
 
         $total_count += $row['cnt'];
         if ($row['cnt']) {
@@ -218,8 +238,25 @@ if ($stx) {
         $tmp_write_table = $g5['write_prefix'] . $search_table[$idx];
 
         $sql = " select * from {$tmp_write_table} where {$sql_search} order by wr_id desc limit {$from_record}, {$rows} ";
+
+        $temp_list = array();
+        if($use_sphinx && $sphinx->is_indexed_table($tmp_write_table)) {
+            $sphinx->search($tmp_write_table, "order by wr_id desc", $from_record, $rows);
+            $wr_list = $sphinx->get_items();
+            for($i=0; $i<count($wr_list); $i++) {
+                $row = sql_fetch(" select * from {$tmp_write_table} where wr_id = ".intVal($wr_list[$i]['wr_id']));
+                $temp_list[] = $row;
+            }
+        } else {
         $result = sql_query($sql);
         for ($i=0; $row=sql_fetch_array($result); $i++) {
+                $temp_list[] = $row;
+            }
+        }
+
+
+        for ($i=0; $i < count($temp_list); $i++) {
+            $row = $temp_list[$i];
             // 검색어까지 링크되면 게시판 부하가 일어남
             $list[$idx][$i] = $row;
             $list[$idx][$i]['href'] = './board.php?bo_table='.$search_table[$idx].'&amp;wr_id='.$row['wr_parent'];
@@ -306,7 +343,7 @@ $group_select .= $group_option;
 $group_select .= '</select>';
 
 if (!$sfl) $sfl = 'wr_subject';
-if (!$sop) $sop = 'or';
+if (!$sop) $sop = 'and';
 
 // 스킨설정
 $wset = (G5_IS_MOBILE) ? apms_skin_set('search_mobile') : apms_skin_set('search');

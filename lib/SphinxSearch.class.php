@@ -44,10 +44,10 @@ class SphinxSearch {
 
     protected $indexed_tables = array();
 
-    public function __construct($sphinx_hostname = "127.0.0.1", $write_table = "board") {
+    public function __construct($sphinx_hostname = "192.168.100.189", $write_table = "board") {
 
         if(!$sphinx_hostname) {
-            $sphinx_hostname = "127.0.0.1";
+            $sphinx_hostname = "192.168.100.189";
         }
         $this->sphinx_hostname = $sphinx_hostname;
 
@@ -194,6 +194,7 @@ class SphinxSearch {
                                 LIMIT $from_record, $rows
                                 OPTION max_matches={$max_matches}  
                      ";
+
 
         $result = mysqli_query($this->sph_connect, $sql);
         for ($i=0; $row=mysqli_fetch_array($result); $i++) {
