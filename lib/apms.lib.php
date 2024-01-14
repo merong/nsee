@@ -674,10 +674,6 @@ function apms_sort_link($col, $query_string='', $flag='asc') {
 // BS3 Style
 function apms_paging($write_pages, $cur_page, $total_page, $url, $add='', $first='<i class="fa fa-angle-double-left"></i>', $prev='<i class="fa fa-angle-left"></i>', $next='<i class="fa fa-angle-right"></i>', $last='<i class="fa fa-angle-double-right"></i>') {
 
-	$url = preg_replace('#&amp;page=[0-9]*(&amp;page=)$#', '$1', $url);
-	//$url = preg_replace('#(&amp;)?page=[0-9]*#', '', $url);
-	//$url .= substr($url, -1) === '?' ? 'page=' : '&amp;page=';
-
 	if(!$cur_page) $cur_page = 1;
 	if(!$total_page) $total_page = 1;
 
@@ -731,10 +727,6 @@ function apms_paging($write_pages, $cur_page, $total_page, $url, $add='', $first
 }
 
 function apms_ajax_paging($id, $write_pages, $cur_page, $total_page, $url, $add='', $first='<i class="fa fa-angle-double-left"></i>', $prev='<i class="fa fa-angle-left"></i>', $next='<i class="fa fa-angle-right"></i>', $last='<i class="fa fa-angle-double-right"></i>') {
-
-	$url = preg_replace('#&amp;page=[0-9]*(&amp;page=)$#', '$1', $url);
-	//$url = preg_replace('#(&amp;)?page=[0-9]*#', '', $url);
-	//$url .= substr($url, -1) === '?' ? 'page=' : '&amp;page=';
 
 	if(!$cur_page) $cur_page = 1;
 	if(!$total_page) $total_page = 1;
@@ -1382,15 +1374,10 @@ function apms_video_info($video_url) {
 		$video['outKey'] = (isset($query['outKey']) && $query['outKey']) ? $query['outKey'] : '';
 	} else if($info['host'] == "tvcast.naver.com" || $info['host'] == "tv.naver.com") { // 네이버 tvcast 단축주소 - 라니안님 코드 반영
 		$video['type'] = 'tvcast';
-		/* 네이버 tv 방식 변경
 		$video['clipNo'] = trim(str_replace("/v/","",$info['path'])); 
 		$play = apms_video_id($video['video_url'], $video['clipNo'], $video['type']);
 		$video['vid'] = (isset($play['vid']) && $play['vid']) ? $play['vid'] : '';
 		$video['outKey'] = (isset($play['outKey']) && $play['outKey']) ? $play['outKey'] : '';
-		*/
-		list($vid) = explode("/", trim(str_replace("/v/","",$info['path']))); 
-		$video['vid'] = $vid;
-		$video['auto'] = (isset($option['auto']) && $option['auto']) ? $option['auto'] : $query['auto'];
 	} else if($info['host'] == "www.slideshare.net") { // slidershare
 		$video['type'] = 'slideshare';
 		$play = apms_video_id($video['video_url'], 1, $video['type']);
@@ -1420,7 +1407,7 @@ function apms_video_info($video_url) {
 		$vtmp = explode("/video/", trim($info['path']));
 		$vquery = explode("/", $vtmp[1]);
 		$video['vid'] = $vquery[0];
-		$video['auto'] = (isset($query['auto']) && $query['auto']) ? 1 : '';
+		$video['auto'] = (isset($option['auto']) && $option['auto']) ? $option['auto'] : $query['autoPlay'];
 	} else if($info['host'] == "www.srook.net") { // www.srook.net
 		$video['type'] = 'srook';
 		$vquery = explode("/", trim($info['path']));
@@ -4200,7 +4187,7 @@ function apms_save_image($url, $path) {
 		$chars_array = array_merge(range(0,9), range('a','z'), range('A','Z'));
         shuffle($chars_array);
         $shuffle = implode('', $chars_array);
-        $file_name = abs(ip2long($_SERVER['REMOTE_ADDR'])).'_'.substr($shuffle,0,8).'_'.replace_filename($filename);
+        $file_name = substr($shuffle,0,8).'_'.replace_filename($filename);
 		$save_dir = sprintf('%s/%s', $data_dir, $file_name);
         $save_url = sprintf('%s/%s', $data_url, $file_name);
 
@@ -4297,7 +4284,7 @@ function apms_editor_image($content, $mode='') {
 				$chars_array = array_merge(range(0,9), range('a','z'), range('A','Z'));
 				shuffle($chars_array);
 				$shuffle = implode('', $chars_array);
-				$file_name = abs(ip2long($_SERVER['REMOTE_ADDR'])).'_'.substr($shuffle,0,8).'_'.replace_filename($filename);
+				$file_name = substr($shuffle,0,8).'_'.replace_filename($filename);
 				$save_file = sprintf('%s/%s', $data_dir, $file_name);
 				$save_url = sprintf('%s/%s', $data_url, $file_name);
 				@copy($destfile, $save_file);
@@ -4734,6 +4721,7 @@ function apms_board_rows($arr) {
 	$sql_mode1 = 0;
 	$sql_mode2 = "wr_parent = wr_id";
 	$sql_mode3 = "";
+    $sql_mode4 = "and as_secret = 0";
 	$post = (isset($arr['comment']) && $arr['comment']) ? $arr['comment'] : '';
 	if($post == "1") {
 		$mode = 'comment';
@@ -4771,6 +4759,43 @@ function apms_board_rows($arr) {
 			$sql_image = "and as_list = '0'";
 		}
 	}
+
+    if($sort == 'rdm') { //정렬을 랜덤으로 하는 경우는 뒷페이지 조회 없음.
+        $arr['page'] = 1;
+    }
+
+    ksort($arr);
+    $redis_cache_key = "board_new_cached:".hash("md5", json_encode($arr));
+
+    /* 캐시키를 등록할때만 사용. 캐시주기나 위젯정보가 변경되면 다시 코드 활성화후 주석 처리
+    if($sort == 'rdm' || $sort == "") {
+        try {
+            $row_temp = sql_fetch("select count(*) cnt from g5_redis_cache_key where redis_key='{$redis_cache_key}' LIMIT 1");
+            if ($row_temp['cnt'] == 0) {
+                sql_query('INSERT IGNORE INTO g5_redis_cache_key SET origin_type=\'array\', sort=\''.$sort.'\', redis_key=\''.$redis_cache_key.'\', origin_string=\''.json_encode($arr).'\'');
+            }
+        } catch(Exception $ex) {
+
+        }
+    }
+    */
+
+
+    include_once(G5_LIB_PATH.'/RedisCache.class.php');
+
+    $cache = new RedisCache();
+
+    $cache_ttl = 60 + rand(30, 90);
+
+    if($cache->exists($redis_cache_key)) {
+        $cache_result =  $cache->unserialize($cache->get($redis_cache_key));
+        return $cache_result;
+    }
+
+    if($sort == 'rdm' || $sort == '') {
+        //syslog(LOG_INFO, __FILE__ . " " . __FUNCTION__ . " " . __LINE__ . " arr=" . json_encode($arr));
+        //syslog(LOG_INFO, __FILE__ . " " . __FUNCTION__ . " " . __LINE__ . " redis_cache_key=" . $redis_cache_key);
+    }
 
 	// 비디오
 	$sql_vid = "";
@@ -4813,7 +4838,7 @@ function apms_board_rows($arr) {
 		case 'poll'			: $orderby1 = 'as_poll desc'; $orderby2 = 'as_poll desc'; break;
 		case 'lucky'		: $orderby1 = 'as_lucky desc'; $orderby2 = 'as_lucky desc'; break;
 		case 'update'		: $orderby1 = 'as_update desc'; $orderby2 = 'as_update desc'; break;
-		case 'rdm'			: $orderby1 = 'rand()'; $orderby2 = 'rand()'; $page = 1; break;
+        case 'rdm'			: $orderby1 = 'rand()'; $orderby2 = 'rand()'; $arr['page'] = 1; $page = 1; break;
 		default				: $orderby1 = 'bn_id desc'; $orderby2 = 'wr_id desc'; break;
 	}
 
@@ -4845,7 +4870,10 @@ function apms_board_rows($arr) {
 			$sql_mode3 = "and as_extra = '3'";
 		}
 
-		$sql_common = "from {$g5['board_new_table']} where $sql_mode2 $sql_mode3 $sql_find $sql_term $sql_main $sql_image $sql_mb $sql_vid $sql_where";
+        $sql_mode4 = "and as_secret = 0";
+
+        $sql_common = "from {$g5['board_new_table']} where $sql_mode2 $sql_mode3 $sql_mode4 $sql_find $sql_term $sql_main $sql_image $sql_mb $sql_vid $sql_where";
+        //syslog(LOG_INFO, __FILE__." LINE : ".__LINE__." ".__FUNCTION__." sql_common : ".$sql_common."\n");
 		if($page > 1) {
 			$total = sql_fetch("select count(*) as cnt $sql_common ", false);
 			$total_count = $total['cnt'];
@@ -4853,6 +4881,8 @@ function apms_board_rows($arr) {
 			$start_rows = ($page - 1) * $rows; // 시작 열을 구함
 		}
 		$result = sql_query(" select *  $sql_common order by $sql_orderby $orderby1 limit $start_rows, $rows ", false);
+
+        syslog(LOG_INFO, __FILE__." ".__FUNCTION__." ".__LINE__." "."sort={$sort}, redis_cache_key={$redis_cache_key}, select *  $sql_common order by $sql_orderby $orderby1 limit $start_rows, $rows " );
 		for ($i=0; $row=sql_fetch_array($result); $i++) {
 
 			$tmp_write_table = $g5['write_prefix'] . $row['bo_table']; 
@@ -4884,8 +4914,10 @@ function apms_board_rows($arr) {
 			$sql_mode3 = "and as_extra = '3'";
 		}
 
+        $sql_mode4 = "and FIND_IN_SET('secret',  wr_option) = 0 ";
+
 		$tmp_write_table = $g5['write_prefix'] . $bo_table;
-		$sql_common = "from $tmp_write_table where wr_is_comment = '{$sql_mode1}' $sql_mode3 $sca_query $sql_term $sql_main $sql_image $sql_mb $sql_vid $sql_where";
+        $sql_common = "from $tmp_write_table where wr_is_comment = '{$sql_mode1}' $sql_mode3 $sql_mode4 $sca_query $sql_term $sql_main $sql_image $sql_mb $sql_vid $sql_where";
 		if($page > 1) {
 			$total = sql_fetch("select count(*) as cnt $sql_common ", false);
 			$total_count = $total['cnt'];
@@ -4893,7 +4925,8 @@ function apms_board_rows($arr) {
 			$start_rows = ($page - 1) * $rows; // 시작 열을 구함
 		}
 		$result = sql_query(" select * $sql_common order by $sql_orderby $orderby2 limit $start_rows, $rows ", false);
-		for ($i=0; $post=sql_fetch_array($result); $i++) { 
+        syslog(LOG_INFO, __FILE__." ".__FUNCTION__." ".__LINE__." "."sort={$sort}, redis_cache_key={$redis_cache_key}, select * $sql_common order by $sql_orderby $orderby2 limit $start_rows, $rows" );
+		for ($i=0; $post=sql_fetch_array($result); $i++) {
 
 			$post['is_thumb_no'] = $thumb_no;
 			$post['img_rows'] = $img_rows;
@@ -4903,6 +4936,7 @@ function apms_board_rows($arr) {
 		}
 	}
 
+    $cache->set($redis_cache_key, $cache->serialize($list), $cache_ttl);
 	return $list;
 }
 
@@ -5176,7 +5210,7 @@ function apms_poll_rows($arr) {
 		$sql_po = (isset($arr['except']) && $arr['except']) ? "and find_in_set(po_id, '{$arr['po_list']}')=0" : "and find_in_set(po_id, '{$arr['po_list']}')";
 	} 
 
-	$result = sql_query(" select * from {$g5['poll_table']} where po_use = 1 $sql_po order by po_id desc limit 0, $rows ", false);
+	$result = sql_query(" select * from {$g5['poll_table']} where 1 $sql_po order by po_id desc limit 0, $rows ", false);
 	for ($i=0; $row=sql_fetch_array($result); $i++) { 
 		$list[$i] = $row;
 	}
@@ -5463,7 +5497,7 @@ function apms_view_extra($type, $bo_table, $wr_id) {
 		$ips = explode(',', trim($po['po_ips']));
 		$ips_cnt = count($ips);
 		for ($i=0; $i < $ips_cnt; $i++) {
-			if ($_SERVER['REMOTE_ADDR'] == trim($ips[$i])) {
+			if ('0.0.0.0' == trim($ips[$i])) {
 				$search_ip = true;
 				break;
 			}

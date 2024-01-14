@@ -2385,7 +2385,7 @@ function get_uniqid()
         // 년월일시분초에 100분의 1초 두자리를 추가함 (1/100 초 앞에 자리가 모자르면 0으로 채움)
         $key = date('YmdHis', time()) . str_pad((int)(microtime()*100), 2, "0", STR_PAD_LEFT);
 
-        $result = sql_query(" insert into {$g5['uniqid_table']} set uq_id = '$key', uq_ip = '{$_SERVER['REMOTE_ADDR']}' ", false);
+        $result = sql_query(" insert into {$g5['uniqid_table']} set uq_id = '$key', uq_ip = '0.0.0.0' ", false);
         if ($result) break; // 쿼리가 정상이면 빠진다.
 
         // insert 하지 못했으면 일정시간 쉰다음 다시 유일키를 만든다.
@@ -2920,7 +2920,7 @@ function insert_cert_history($mb_id, $company, $method)
                 set mb_id = '$mb_id',
                     cr_company = '$company',
                     cr_method = '$method',
-                    cr_ip = '{$_SERVER['REMOTE_ADDR']}',
+                    cr_ip = '0.0.0.0',
                     cr_date = '".G5_TIME_YMD."',
                     cr_time = '".G5_TIME_HIS."' ";
     sql_query($sql);
@@ -2942,7 +2942,7 @@ function certify_count_check($mb_id, $type)
     if($mb_id) {
         $sql .= " where mb_id = '$mb_id' ";
     } else {
-        $sql .= " where cr_ip = '{$_SERVER['REMOTE_ADDR']}' ";
+        $sql .= " where cr_ip = '0.0.0.0' ";
     }
 
     $sql .= " and cr_method = '".$type."' and cr_date = '".G5_TIME_YMD."' ";
@@ -3399,7 +3399,7 @@ function insert_popular($field, $str)
     global $g5;
 
     if(!in_array('mb_id', $field)) {
-        $sql = " insert into {$g5['popular_table']} set pp_word = '{$str}', pp_date = '".G5_TIME_YMD."', pp_ip = '{$_SERVER['REMOTE_ADDR']}' ";
+        $sql = " insert into {$g5['popular_table']} set pp_word = '{$str}', pp_date = '".G5_TIME_YMD."', pp_ip = '0.0.0.0' ";
         sql_query($sql, FALSE);
     }
 }

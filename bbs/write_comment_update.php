@@ -214,7 +214,7 @@ if ($w == 'c') // 댓글 입력
                      wr_homepage = '$wr_homepage',
                      wr_datetime = '".G5_TIME_YMDHIS."',
                      wr_last = '',
-                     wr_ip = '{$_SERVER['REMOTE_ADDR']}',
+                     wr_ip = '0.0.0.0',
                      as_level = '$as_level',
 					 as_lucky = '$as_lucky',
                      as_re_mb = '$as_re_mb',
@@ -375,7 +375,7 @@ else if ($w == 'cu') // 댓글 수정
 
     $sql_ip = "";
     if (!$is_admin)
-        $sql_ip = " , wr_ip = '{$_SERVER['REMOTE_ADDR']}' ";
+        $sql_ip = " , wr_ip = '0.0.0.0' ";
 
 	$sql_secret = " , wr_option = '$wr_secret' ";
 

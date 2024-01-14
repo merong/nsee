@@ -17,7 +17,7 @@ if($is_cmt_star) {
 				}
 			} else {
 				// 비회원
-				$row = sql_fetch(" select count(*) as cnt from $write_table where wr_is_comment = '1' and wr_parent = '$wr_id' and wr_comment_reply = '' and mb_id = '' and wr_ip = '{$_SERVER['REMOTE_ADDR']}' and as_star_score > 0 ", false);
+				$row = sql_fetch(" select count(*) as cnt from $write_table where wr_is_comment = '1' and wr_parent = '$wr_id' and wr_comment_reply = '' and mb_id = '' and wr_ip = '0.0.0.0' and as_star_score > 0 ", false);
 
 				// 등록한 별점이 없으면
 				if(!$row['cnt']) {

@@ -346,7 +346,7 @@ if ($w == '' || $w == 'r') {
                      wr_homepage = '$wr_homepage',
                      wr_datetime = '".G5_TIME_YMDHIS."',
                      wr_last = '".G5_TIME_YMDHIS."',
-                     wr_ip = '{$_SERVER['REMOTE_ADDR']}',
+                     wr_ip = '0.0.0.0',
 					 wr_1 = '$wr_1',
                      wr_2 = '$wr_2',
                      wr_3 = '$wr_3',
@@ -478,7 +478,7 @@ if ($w == '' || $w == 'r') {
 
     $sql_ip = '';
     if (!$is_admin)
-        $sql_ip = " , wr_ip = '{$_SERVER['REMOTE_ADDR']}' ";
+        $sql_ip = " , wr_ip = '0.0.0.0' ";
 
 	// 외부 이미지 저장
 	if($board['as_save']) {

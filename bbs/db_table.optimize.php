@@ -13,30 +13,30 @@ if(isset($config['cf_optimize_date']) && $config['cf_optimize_date'] >= G5_TIME_
 if($config['cf_visit_del'] > 0) {
     $tmp_before_date = date("Y-m-d", G5_SERVER_TIME - ($config['cf_visit_del'] * 86400));
     $sql = " delete from {$g5['visit_table']} where vi_date < '$tmp_before_date' ";
-    sql_query($sql);
-    sql_query(" OPTIMIZE TABLE `{$g5['visit_table']}`, `{$g5['visit_sum_table']}` ");
+    //sql_query($sql); //2021-08-25 batch 처리로 변경
+    //sql_query(" OPTIMIZE TABLE `{$g5['visit_table']}`, `{$g5['visit_sum_table']}` ");
 }
 
 // 설정일이 지난 인기검색어 삭제
 if($config['cf_popular_del'] > 0) {
     $tmp_before_date = date("Y-m-d", G5_SERVER_TIME - ($config['cf_popular_del'] * 86400));
     $sql = " delete from {$g5['popular_table']} where pp_date < '$tmp_before_date' ";
-    sql_query($sql);
-    sql_query(" OPTIMIZE TABLE `{$g5['popular_table']}` ");
+    //sql_query($sql); //2021-08-25 batch 처리로 변경
+    //sql_query(" OPTIMIZE TABLE `{$g5['popular_table']}` ");
 }
 
 // 설정일이 지난 최근게시물 삭제 - 
 if($config['cf_new_del'] > 0) {
-    $sql = " delete from {$g5['board_new_table']} where (TO_DAYS('".G5_TIME_YMDHIS."') - TO_DAYS(bn_datetime)) > '{$config['cf_new_del']}' and as_publish <> '1' and as_type <> '1'";
+    $sql = " delete from {$g5['board_new_table']} where (TO_DAYS('".G5_TIME_YMDHIS."') - TO_DAYS(bn_datetime)) > '{$config['cf_new_del']}' and as_publish <> '1' ";
     sql_query($sql, false);
-    sql_query(" OPTIMIZE TABLE `{$g5['board_new_table']}` ");
+    //sql_query(" OPTIMIZE TABLE `{$g5['board_new_table']}` ");
 }
 
 // 설정일이 지난 쪽지 삭제
 if($config['cf_memo_del'] > 0) {
     $sql = " delete from {$g5['memo_table']} where (TO_DAYS('".G5_TIME_YMDHIS."') - TO_DAYS(me_send_datetime)) > '{$config['cf_memo_del']}' ";
     sql_query($sql);
-    sql_query(" OPTIMIZE TABLE `{$g5['memo_table']}` ");
+    //sql_query(" OPTIMIZE TABLE `{$g5['memo_table']}` ");
 }
 
 // 탈퇴회원 자동 삭제
@@ -55,10 +55,10 @@ if($config['cf_leave_day'] > 0) {
 // 내글반응삭제 - 60일
 $sql = " delete from {$g5['apms_response']} where (TO_DAYS('".G5_TIME_YMDHIS."') - TO_DAYS(regdate)) > '60' ";
 sql_query($sql, false);
-sql_query(" OPTIMIZE TABLE `{$g5['apms_response']}` ", false);
+//sql_query(" OPTIMIZE TABLE `{$g5['apms_response']}` ", false);
 
 // 음성 캡챠 파일 삭제
-$captcha_mp3 = glob(G5_DATA_PATH.'/cache/kcaptcha-*.mp3');
+$captcha_mp3 = glob(G5_PATH.'/data/cache/kcaptcha-*.mp3');
 if($captcha_mp3 && is_array($captcha_mp3)) {
     foreach ($captcha_mp3 as $file) {
         if (filemtime($file) + 86400 < G5_SERVER_TIME) {

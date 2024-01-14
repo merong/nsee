@@ -79,7 +79,7 @@ if ($wr_content && ($member['mb_level'] >= $board['bo_comment_level']))
                          wr_email = '$wr_email',
                          wr_homepage = '$wr_homepage',
                          wr_datetime = '".G5_TIME_YMDHIS."',
-                         wr_ip = '{$_SERVER['REMOTE_ADDR']}' ";
+                         wr_ip = '0.0.0.0' ";
         sql_query($sql);
 
         $comment_id = sql_insert_id();
