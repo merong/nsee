@@ -225,7 +225,7 @@ if($page_rows > 0) {
         $sphinx->search($write_table, $sql_order, $from_record, $page_rows);
         $wr_list = $sphinx->get_items();
     } else {
-    $result = sql_query($sql);
+        $result = sql_query($sql);
         while ($row = sql_fetch_array($result)) {
             $wr_list[] = $row;
         }

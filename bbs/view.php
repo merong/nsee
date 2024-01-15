@@ -25,26 +25,32 @@ if ($sca || $stx || $stx === '0') {
 }
 
 if (!$board['bo_use_list_view']) {
-    if ($sql_search)
+    if ($sql_search) {
         $sql_search = " and " . $sql_search;
 
+    }
+
+    if(true) { //이전글 다음글을 캐시 처리
+        include_once __DIR__."/"."list_view_sphinx_cached.inc.php";
+    } else {
     // 윗글을 얻음
-    $sql = " select wr_id, wr_subject, wr_comment, wr_datetime from {$write_table} where wr_is_comment = 0 and wr_num = '{$write['wr_num']}' and wr_reply < '{$write['wr_reply']}' {$sql_search} order by wr_num desc, wr_reply desc limit 1 ";
+        $sql = " select wr_id, wr_subject, wr_comment, wr_datetime from {$write_table} where wr_is_comment = 0 and wr_num = '{$write['wr_num']}' and wr_reply < '{$write['wr_reply']}' {$sql_search} order by wr_num desc limit 1 ";
     $prev = sql_fetch($sql);
     // 위의 쿼리문으로 값을 얻지 못했다면
     if (!$prev['wr_id'])     {
-        $sql = " select wr_id, wr_subject, wr_comment, wr_datetime from {$write_table} where wr_is_comment = 0 and wr_num < '{$write['wr_num']}' {$sql_search} order by wr_num desc, wr_reply desc limit 1 ";
+            $sql = " select wr_id, wr_subject, wr_comment, wr_datetime from {$write_table} where wr_is_comment = 0 and wr_num < '{$write['wr_num']}' {$sql_search} order by wr_num desc limit 1 ";
         $prev = sql_fetch($sql);
     }
 
     // 아래글을 얻음
-    $sql = " select wr_id, wr_subject, wr_comment, wr_datetime from {$write_table} where wr_is_comment = 0 and wr_num = '{$write['wr_num']}' and wr_reply > '{$write['wr_reply']}' {$sql_search} order by wr_num, wr_reply limit 1 ";
+        $sql = " select wr_id, wr_subject, wr_comment, wr_datetime from {$write_table} where wr_is_comment = 0 and wr_num = '{$write['wr_num']}' and wr_reply > '{$write['wr_reply']}' {$sql_search} order by wr_num limit 1 ";
     $next = sql_fetch($sql);
     // 위의 쿼리문으로 값을 얻지 못했다면
     if (!$next['wr_id']) {
-        $sql = " select wr_id, wr_subject, wr_comment, wr_datetime from {$write_table} where wr_is_comment = 0 and wr_num > '{$write['wr_num']}' {$sql_search} order by wr_num, wr_reply limit 1 ";
+            $sql = " select wr_id, wr_subject, wr_comment, wr_datetime from {$write_table} where wr_is_comment = 0 and wr_num > '{$write['wr_num']}' {$sql_search} order by wr_num limit 1 ";
         $next = sql_fetch($sql);
     }
+}
 }
 
 // 이전글 링크
@@ -132,6 +138,9 @@ if($view['as_shingo'] < 0) {
 	} else {
 		$is_view_shingo = true;
 		$view['content'] = $view['wr_content'] = ''; // 글내용 지움
+		if(!$is_admin)
+			unset($view['file']); //첨부도 다 날림
+
 	}
 }
 

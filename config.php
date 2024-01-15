@@ -36,7 +36,8 @@ www.sir.kr 과 sir.kr 도메인은 서로 다른 도메인으로 인식합니다
 */
 define('G5_COOKIE_DOMAIN',  '');
 
-define('G5_DBCONFIG_FILE',  'dbconfig.php');
+//define('G5_DBCONFIG_FILE',  'dbconfig.php');
+define('G5_DBCONFIG_FILE',  'd5f8213f719c12addab058ab4c5292ee0645e14f006a7d97e9f6a84faafac6f0.php');
 
 define('G5_ADMIN_DIR',      'adm');
 define('G5_BBS_DIR',        'bbs');

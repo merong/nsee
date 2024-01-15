@@ -3,7 +3,7 @@
 ** 공통 변수, 상수, 코드
 *******************************************************************************/
 error_reporting( E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_ERROR | E_WARNING | E_PARSE | E_USER_ERROR | E_USER_WARNING );
-
+ini_set('display_errors', 1);
 // 보안설정이나 프레임이 달라도 쿠키가 통하도록 설정
 header('P3P: CP="ALL CURa ADMa DEVa TAIa OUR BUS IND PHY ONL UNI PUR FIN COM NAV INT DEM CNT STA POL HEA PRE LOC OTC"');
 
@@ -139,7 +139,7 @@ $g5_debug = array('php'=>array(),'sql'=>array());
 //==============================================================================
 // 공통
 //------------------------------------------------------------------------------
-$dbconfig_file = G5_DATA_PATH.'/'.G5_DBCONFIG_FILE;
+$dbconfig_file = G5_PATH.'/'.G5_DBCONFIG_FILE;
 if (file_exists($dbconfig_file)) {
     include_once($dbconfig_file);
     include_once(G5_LIB_PATH.'/common.lib.php');    // 공통 라이브러리
