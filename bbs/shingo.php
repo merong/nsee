@@ -115,6 +115,22 @@ if($act == "lock") {
 		apms_return($msg);
 	}
 		
+    //level 3 미만 신고 금지
+    /*
+    if($member['mb_level'] < 3) {
+        $msg = '레벨 3이상만 신고 가능합니다.';
+        apms_return($msg);
+    }
+    */
+
+    //동일 아이피 신고 여부 확인
+    $sql = " select count(*) as cnt from {$g5['apms_shingo']} where bo_table = '$bo_table' and wr_id = '$wr_id' and ip = '{$_SERVER['REMOTE_ADDR']}' ";
+    $row = sql_fetch($sql);
+    if($row['cnt'] > 0) {
+        $msg = '이미 신고하신 글입니다.';
+        apms_return($msg);
+    }
+
 	//신고여부
 	$sql = " select count(*) as cnt from {$g5['apms_shingo']} where bo_table = '$bo_table' and wr_id = '$wr_id' and mb_id = '{$member['mb_id']}' ";
 	$row = sql_fetch($sql);
