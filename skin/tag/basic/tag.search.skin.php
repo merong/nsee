@@ -2,7 +2,7 @@
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
-add_stylesheet('<link rel="stylesheet" href="'.$skin_url.'/style.css" media="screen">', 0);
+add_stylesheet('<link rel="stylesheet" href="'.$skin_url.'/style.css?css_ver=2" media="screen">', 0);
 
 // 헤더 출력
 if($header_skin)
@@ -82,7 +82,7 @@ if($header_skin)
 		<div class="media">
 			<div class="photo pull-left">
 				<?php if($list[$i]['img']['src']) { 
-					$img = apms_thumbnail($list[$i]['img']['src'], 80, 80);
+					$img = apms_thumbnail($list[$i]['img']['src'], 320, 240);
 				?>
 					<img src="<?php echo $img['src'];?>" alt="<?php echo $img['alt'];?>">
 				<?php } else { ?>

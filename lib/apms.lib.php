@@ -4882,7 +4882,7 @@ function apms_board_rows($arr) {
 		}
 		$result = sql_query(" select *  $sql_common order by $sql_orderby $orderby1 limit $start_rows, $rows ", false);
 
-        syslog(LOG_INFO, __FILE__." ".__FUNCTION__." ".__LINE__." "."sort={$sort}, redis_cache_key={$redis_cache_key}, select *  $sql_common order by $sql_orderby $orderby1 limit $start_rows, $rows " );
+        ///syslog(LOG_INFO, __FILE__." ".__FUNCTION__." ".__LINE__." "."sort={$sort}, redis_cache_key={$redis_cache_key}, select *  $sql_common order by $sql_orderby $orderby1 limit $start_rows, $rows " );
 		for ($i=0; $row=sql_fetch_array($result); $i++) {
 
 			$tmp_write_table = $g5['write_prefix'] . $row['bo_table']; 

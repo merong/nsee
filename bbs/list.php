@@ -44,6 +44,7 @@ $is_search_bbs = false;
 if ($sca || $stx || $stx === '0') {     //검색이면
     $is_search_bbs = true;      //검색구분변수 true 지정
 
+
     //제목이나 본문검색인 경우에만 sphinx 검색을 사용하도록 함.(카테고리만 선택한 경우도 추가)
     if(($stx && (strpos($sfl, "wr_subject") !== FALSE  ||  strpos($sfl, "wr_content") !== FALSE)) || $sca) {
         try {
@@ -56,31 +57,32 @@ if ($sca || $stx || $stx === '0') {     //검색이면
 
     if($use_sphinx && $sphinx->is_indexed_table($write_table)) {
         $sphinx->set_sql_search($sca, $sfl, $stx, $sop);
+
         $total_count = $sphinx->get_total_count($write_table);
     } else {
-    $sql_search = get_sql_search($sca, $sfl, $stx, $sop);
+        $sql_search = get_sql_search($sca, $sfl, $stx, $sop);
 
-	// 가장 작은 번호를 얻어서 변수에 저장 (하단의 페이징에서 사용)
-    $sql = " select MIN(wr_num) as min_wr_num from {$write_table} ";
-    $row = sql_fetch($sql);
-    $min_spt = (int)$row['min_wr_num'];
+        // 가장 작은 번호를 얻어서 변수에 저장 (하단의 페이징에서 사용)
+        $sql = " select MIN(wr_num) as min_wr_num from {$write_table} ";
+        $row = sql_fetch($sql);
+        $min_spt = (int)$row['min_wr_num'];
 
-    if (!$spt) $spt = $min_spt;
+        if (!$spt) $spt = $min_spt;
 
-    $sql_search .= " and (wr_num between {$spt} and ({$spt} + {$config['cf_search_part']})) ";
+        $sql_search .= " and (wr_num between {$spt} and ({$spt} + {$config['cf_search_part']})) ";
 
-	if($sql_apms_where) $sql_search .= $sql_apms_where;
+        if ($sql_apms_where) $sql_search .= $sql_apms_where;
 
-    // 원글만 얻는다. (코멘트의 내용도 검색하기 위함)
-    // 라엘님 제안 코드로 대체 http://sir.kr/g5_bug/2922
+        // 원글만 얻는다. (코멘트의 내용도 검색하기 위함)
+        // 라엘님 제안 코드로 대체 http://sir.kr/g5_bug/2922
         $sql = " SELECT /* list.php */ COUNT(DISTINCT `wr_parent`) AS `cnt` FROM {$write_table} WHERE {$sql_search} ";
-    $row = sql_fetch($sql);
-    $total_count = $row['cnt'];
-    /*
-    $sql = " select distinct wr_parent from {$write_table} where {$sql_search} ";
-    $result = sql_query($sql);
-    $total_count = sql_num_rows($result);
-    */
+        $row = sql_fetch($sql);
+        $total_count = $row['cnt'];
+        /*
+        $sql = " select distinct wr_parent from {$write_table} where {$sql_search} ";
+        $result = sql_query($sql);
+        $total_count = sql_num_rows($result);
+        */
     }
 } else {
     $sql_search = "";
@@ -199,10 +201,7 @@ if ($is_search_bbs) {
     if($use_sphinx && $sphinx->is_indexed_table($write_table)) {
 
     } else {
-    $sql = " select distinct wr_parent from {$write_table} where {$sql_search} {$sql_order} limit {$from_record}, $page_rows ";
-        if($bo_table == "javc") {
-            syslog(LOG_INFO, __FILE__." ".__LINE__." sql=".$sql);
-        }
+        $sql = " select distinct wr_parent from {$write_table} where {$sql_search} {$sql_order} limit {$from_record}, $page_rows ";
     }
 } else {
     $sql = " select /* list.php */ * from {$write_table} where wr_is_comment = 0 {$sql_apms_where} ";

@@ -5,8 +5,8 @@
 .btn-tag { background:none; border:none; }
 
 .tagbox-media { padding-bottom:10px; }
-.tagbox-media .photo i { border-radius:50%; background: rgb(245, 245, 245); padding: 15px; width: 64px; height: 64px; text-align: center; color: rgb(143, 143, 143); font-size: 30px; display: inline-block; }
-.tagbox-media .photo img { border-radius:50%; width: 64px !important; height: 64px !important; display:inline-block; }
+.tagbox-media .photo i {  background: rgb(245, 245, 245); padding: 15px; width: 64px; height: 64px; text-align: center; color: rgb(143, 143, 143); font-size: 30px; display: inline-block; }
+.tagbox-media .photo img { width: 120px !important; height: 120px !important; display:inline-block; }
 .tagbox-media .media { border-bottom:1px solid #eee; margin:0px; padding:12px; }
 .tagbox-media :first-child.media { margin-top:0px; padding-top:0px; }
 .tagbox-media :last-child.media { border-bottom:0px; }
