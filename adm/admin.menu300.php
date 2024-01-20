@@ -9,5 +9,7 @@ $menu['menu300'] = array (
     array('300600', '내용관리', G5_ADMIN_URL.'/contentlist.php', 'scf_contents', 1),
     array('300700', 'FAQ관리', G5_ADMIN_URL.'/faqmasterlist.php', 'scf_faq', 1),
     array('300820', '글,댓글 현황', G5_ADMIN_URL.'/write_count.php', 'scf_write_count'),
+	array('300110', '일괄작성', G5_ADMIN_URL.'/board_excel_form.php', 'all_upload'),
+    array('300830', '게시판 첨부 파일', G5_ADMIN_URL . '/board_file_manager.php', 'file_manager'),
 );
 ?>
