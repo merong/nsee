@@ -166,6 +166,18 @@ try {
                 $file_count = $row['cnt'];
                 sql_query("update {$write_table} set wr_file = '{$file_count}' where wr_id = '{$wr_id}'");
 
+
+                $row = sql_fetch("select * from {$write_table} where wr_id = '{$wr_id}'");
+                $wrt = array("chk_img"=>true, "wr_id"=>$row['wr_id'], "wr_option"=>'', "wr_content"=>stripslashes($row['wr_content']), "wr_link1"=>$row['wr_link1'], "wr_link2"=>$row['wr_link2']);
+
+                $wtype = apms_wr_type($bo_table, $wrt);
+
+                //$as_thumb = apms_wr_thumbnail($bo_table, $wrt, 0, 0);
+
+                if($wtype['as_thumb']) {
+                    sql_query(" update {$write_table} set as_list = '{$wtype['as_list']}', as_thumb = '".addslashes($wtype['as_thumb'])."', as_video = '{$wtype['as_video']}' where wr_id = '{$row['wr_id']}' ", false);
+                }
+
             }
 
             $json_result['message'] = '정상적으로 수정하였습니다.';

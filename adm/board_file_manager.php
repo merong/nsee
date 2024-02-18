@@ -1,7 +1,7 @@
 <?php
 $sub_menu = "300830";
 require_once './_common.php';
-
+ini_set('display_errors', 1);
 auth_check($auth[$sub_menu], "w");
 
 $default_bo_table = "javc";
@@ -71,6 +71,7 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
         $row['bf_source'] = $board_file['bf_source'];
         $board_path = G5_DATA_PATH . '/file/' . $bo_table;
 
+
         $row['thumb'] = thumbnail($board_file['bf_file'], $board_path, $board_path, 120, 100, true, 'center', false, false, 90);
 
         if ($row['thumb']) {
@@ -79,6 +80,33 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
             $row['file_url'] = str_replace(G5_PATH, G5_URL, $board_path . '/' . $board_file['bf_file']);
             $row['thumb_html'] = '<img src="' . $thumb_url . '" width="120" height="100" class="thumbnail" alt="">';
         }
+
+        if($row['as_thumb']) {
+            $p = @parse_url($row['as_thumb']);
+            if(strpos($p['path'], '/'.G5_DATA_DIR.'/') != 0) {
+                $data_path = preg_replace('/^\/.*\/' . G5_DATA_DIR . '/', '/' . G5_DATA_DIR, $p['path']);
+            } else {
+                $data_path = $p['path'];
+            }
+
+            $as_thumb_path = G5_PATH.$data_path;
+            $row['as_thumb_path'] = $as_thumb_path;
+
+            if(!file_exists($as_thumb_path)) {
+
+                $wrt = array("chk_img"=>true, "wr_id"=>$row['wr_id'], "wr_option"=>'', "wr_content"=>stripslashes($row['wr_content']), "wr_link1"=>$row['wr_link1'], "wr_link2"=>$row['wr_link2']);
+
+                $wtype = apms_wr_type($bo_table, $wrt);
+
+                //$as_thumb = apms_wr_thumbnail($bo_table, $wrt, 0, 0);
+
+                if($wtype['as_thumb']) {
+                    sql_query(" update {$write_table} set as_list = '{$wtype['as_list']}', as_thumb = '".addslashes($wtype['as_thumb'])."', as_video = '{$wtype['as_video']}' where wr_id = '{$row['wr_id']}' ", false);
+                }
+            }
+
+        }
+
     } else {
         $row['bf_no'] = '';
         $row['bf_source'] = '';
@@ -219,6 +247,7 @@ $colspan = 10;
                     <th scope="col">썸네일</a></th>
                     <th scope="col">업로드파일</th>
                     <th scope="col">관리</th>
+
                     <th scope="col">-</th>
 
                 </tr>
@@ -249,7 +278,7 @@ $colspan = 10;
                         </td>
 
                         <td class="td_mng td_mng_s"><?php echo $s_upd ?></td>
-                        <td>-</td>
+                        <td> -</td>
                     </tr>
                     <?php
                 }
