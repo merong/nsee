@@ -211,6 +211,9 @@ if(!$is_view_shingo) {
 		$view['content'] = $autoplay.$view['content'];
 	}
 
+	//[이미지URL수정]
+	$view['content'] = preg_replace("/\[\<a\s*href\=\"(http|https)\:\/\/([^[:space:]]+)\.(gif|png|jpg|jpeg|bmp|wepb)\"\s*[^\>]*\>[^\s]*\<\/a\>\]/i", "<img src=\"$1://$2.$3\" alt=\"\">", $view['content']);
+
 	//$view['rich_content'] = preg_replace("/{이미지\:([0-9]+)[:]?([^}]*)}/ie", "view_image(\$view, '\\1', '\\2')", $view['content']);
 	if($view['as_img'] == "2") { // 본문삽입
 		function conv_rich_content($matches){

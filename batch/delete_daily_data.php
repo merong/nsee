@@ -1,14 +1,5 @@
 <?php
-if (PHP_SAPI != 'cli') die("error!! only you can run cli mode");
 
-if (php_sapi_name() == "cli") {
-    // In cli-mode
-} else {
-    // Not in cli-mode
-    die("Error. Not in cli-mode");
-}
-
-chdir(__DIR__);
 
 include(dirname(__DIR__) . "/common.php");
 
@@ -19,7 +10,7 @@ $step = 10000; //만개 단위로 삭제 처리
 if($config['cf_visit_del'] > 0) {
     $delete_target_date = date("Y-m-d", G5_SERVER_TIME - ($config['cf_visit_del'] * 86400));
     echo "cf_visit_del target_date=".$delete_target_date."\n";
-    //$info  = sql_fetch("select min(vi_id) min_id, max(vi_id) max_id from  {$g5['visit_table']} where vi_date = '$delete_target_date' ");
+    $info  = sql_fetch("select min(vi_id) min_id, max(vi_id) max_id from  {$g5['visit_table']} where vi_date = '$delete_target_date' ");
 
     print_r($info);
     if($info['min_id'] && $info['max_id']) {

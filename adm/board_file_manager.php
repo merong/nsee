@@ -23,10 +23,11 @@ $sql_common = " from {$write_table} t1  ";
 $sql_search = " where wr_is_comment = 0";
 
 if ($exist_type == "exist") {
-    $sql_search .= " and exists (select * from {$g5['board_file_table']} where bo_table = '{$bo_table}' and wr_id = t1.wr_id and bf_no='0') ";
+    $sql_search .= " and exists (select * from {$g5['board_file_table']} where bo_table = '{$bo_table}' and wr_id = t1.wr_id and bf_no='0' and is_exist_file = 1) ";
 } else if ($exist_type == "not_exist") {
-    $sql_search .= " and not exists (select * from {$g5['board_file_table']} where bo_table = '{$bo_table}' and wr_id = t1.wr_id and bf_no='0') ";
+    $sql_search .= " and  exists (select * from {$g5['board_file_table']} where bo_table = '{$bo_table}' and wr_id = t1.wr_id and bf_no='0' and is_exist_file = 0) ";
 }
+
 
 
 
@@ -90,7 +91,7 @@ for ($i = 0; $row = sql_fetch_array($result); $i++) {
 }
 
 
-$qstr .= "&amp;exist_type=".$exist_type;
+$qstr .= "&amp;bo_table={$bo_table}&amp;exist_type={$exist_type}";
 
 
 $listall = '<a href="' . $_SERVER['SCRIPT_NAME'] . '" class="ov_listall">처음</a>';

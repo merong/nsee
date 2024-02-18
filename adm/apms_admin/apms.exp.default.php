@@ -56,7 +56,7 @@ function apms_exp_insert($mb_id, $point, $content='', $rel_table='', $rel_action
 include_once(G5_ADMIN_PATH.'/admin.head.sub.php');
 
 //한 번에 1000개씩 처리
-$rows = 1000;
+$rows = 10000;
 
 //회원 페이지 계산
 $total = sql_fetch("select count(*) as cnt from {$g5['member_table']} where mb_email_certify <> '' and mb_leave_date = '' and mb_intercept_date = '' ", false);

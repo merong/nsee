@@ -22,7 +22,7 @@ try {
                 if($is_delete) { //기존 업로드된 파일 삭제
                     $row = sql_fetch("select * from g5_board_file where bo_table = '{$bo_table}' and wr_id='{$wr_id}' and bf_no = '{$bf_no}'");
                     if($row) {
-                        $delete_file = run_replace('delete_file_path', G5_DATA_PATH . '/file/' . $bo_table . '/' . str_replace('../', '', $row['bf_file']), $row);
+                        $delete_file = G5_DATA_PATH . '/file/' . $bo_table . '/' . str_replace('../', '', $row['bf_file']);
                         if (file_exists($delete_file)) {
                             @unlink(G5_DATA_PATH . '/file/' . $bo_table . '/' . $row['bf_file']);
                         }
@@ -89,7 +89,7 @@ try {
                         $row = sql_fetch(" select * from {$g5['board_file_table']} where bo_table = '{$bo_table}' and wr_id = '{$wr_id}' and bf_no = '{$bf_no}' ");
 
                         if (isset($row['bf_file']) && $row['bf_file']) {
-                            $delete_file = run_replace('delete_file_path', G5_DATA_PATH . '/file/' . $bo_table . '/' . str_replace('../', '', $row['bf_file']), $row);
+                            $delete_file = G5_DATA_PATH . '/file/' . $bo_table . '/' . str_replace('../', '', $row['bf_file']);
                             if (file_exists($delete_file)) {
                                 @unlink(G5_DATA_PATH . '/file/' . $bo_table . '/' . $row['bf_file']);
                             }
@@ -130,14 +130,12 @@ try {
                                 set bf_source = '{$upload['source']}',
                                      bf_file = '{$upload['file']}',
                                      bf_content = '',
-                                     bf_fileurl = '{$upload['fileurl']}',
-                                     bf_thumburl = '{$upload['thumburl']}',
-                                     bf_storage = '{$upload['storage']}',
                                      bf_filesize = '".(int)$upload['filesize']."',
                                      bf_width = '".$bf_width."',
                                      bf_height = '".$bf_height."',
                                      bf_type = '".$bf_type."',
-                                     bf_datetime = '".G5_TIME_YMDHIS."'
+                                     bf_datetime = '".G5_TIME_YMDHIS."',
+                                     is_exist_file = 1
                                 where bo_table = '{$bo_table}'
                                         and wr_id = '{$wr_id}'
                                         and bf_no = '{$row['bf_no']}' ";
@@ -145,21 +143,20 @@ try {
 
                         } else { //insert 처리
                             $sql = " insert into {$g5['board_file_table']}
-                        set bo_table = '{$bo_table}',
-                             wr_id = '{$wr_id}',
-                             bf_no = '0',
-                             bf_source = '{$upload['source']}',
-                             bf_file = '{$upload['file']}',
-                             bf_content = '',
-                             bf_fileurl = '{$upload['fileurl']}',
-                             bf_thumburl = '{$upload['thumburl']}',
-                             bf_storage = '{$upload['storage']}',
-                             bf_download = 0,
-                             bf_filesize = '" . (int)$upload['filesize'] . "',
-                             bf_width = '" . $bf_width . "',
-                             bf_height = '" . $bf_height . "',
-                             bf_type = '" . $bf_type . "',
-                             bf_datetime = '" . G5_TIME_YMDHIS . "' ";
+                                    set bo_table = '{$bo_table}',
+                                         wr_id = '{$wr_id}',
+                                         bf_no = '0',
+                                         bf_source = '{$upload['source']}',
+                                         bf_file = '{$upload['file']}',
+                                         bf_content = '',
+                                         bf_download = 0,
+                                         bf_filesize = '" . (int)$upload['filesize'] . "',
+                                         bf_width = '" . $bf_width . "',
+                                         bf_height = '" . $bf_height . "',
+                                         bf_type = '" . $bf_type . "',
+                                         bf_datetime = '" . G5_TIME_YMDHIS . "',
+                                         is_exist_file = 1
+                                ";
                             sql_query($sql);
                         }
                     }

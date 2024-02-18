@@ -45,7 +45,8 @@ $sql = " select count(*) as cnt {$sql_common} {$sql_search} {$sql_order} ";
 $row = sql_fetch($sql);
 $total_count = $row['cnt'];
 
-$rows = $config['cf_page_rows'];
+//$rows = $config['cf_page_rows'];
+$rows = 200;// 500명 출력
 $total_page  = ceil($total_count / $rows);  // 전체 페이지 계산
 if ($page < 1) $page = 1; // 페이지가 없으면 첫 페이지 (1 페이지)
 $from_record = ($page - 1) * $rows; // 시작 열을 구함
@@ -104,7 +105,8 @@ $colspan = ($is_membership) ? 17 : 16;
     <option value="mb_hp"<?php echo get_selected($_GET['sfl'], "mb_hp"); ?>>휴대폰번호</option>
     <option value="mb_point"<?php echo get_selected($_GET['sfl'], "mb_point"); ?>>포인트</option>
     <option value="mb_datetime"<?php echo get_selected($_GET['sfl'], "mb_datetime"); ?>>가입일시</option>
-    <option value="mb_ip"<?php echo get_selected($_GET['sfl'], "mb_ip"); ?>>IP</option>
+    <option value="mb_ip"<?php echo get_selected($_GET['sfl'], "mb_ip"); ?>>가입시IP</option>
+	<option value="mb_login_ip"<?php echo get_selected($_GET['sfl'], "mb_login_ip"); ?>>마지막 로그인IP</option>
     <option value="mb_recommend"<?php echo get_selected($_GET['sfl'], "mb_recommend"); ?>>추천인</option>
     <option value="mb_1"<?php echo get_selected($_GET['sfl'], "mb_1"); ?>>여분필드1</option>
 </select>
@@ -143,7 +145,7 @@ $colspan = ($is_membership) ? 17 : 16;
         <th scope="col" id="mb_list_open"><?php echo subject_sort_link('mb_open', '', 'desc') ?>정보공개</a></th>
         <th scope="col" id="mb_list_mailr"><?php echo subject_sort_link('mb_mailling', '', 'desc') ?>메일수신</a></th>
         <th scope="col" id="mb_list_auth">상태</th>
-        <th scope="col" id="mb_list_mobile">휴대폰</th>
+        <th scope="col" id="mb_list_mobile">가입시ip</th>
         <th scope="col" id="mb_list_lastcall"><?php echo subject_sort_link('mb_today_login', '', 'desc') ?>최종접속</a></th>
         <th scope="col" id="mb_list_grp">접근그룹</th>
 		<?php if($is_membership) { ?>
@@ -158,7 +160,7 @@ $colspan = ($is_membership) ? 17 : 16;
         <th scope="col" id="mb_list_adultc"><?php echo subject_sort_link('mb_adult', '', 'desc') ?>성인인증</a></th>
         <th scope="col" id="mb_list_auth"><?php echo subject_sort_link('mb_intercept_date', '', 'desc') ?>접근차단</a></th>
         <th scope="col" id="mb_list_deny"><?php echo subject_sort_link('mb_level', '', 'desc') ?>권한</a></th>
-        <th scope="col" id="mb_list_tel">전화번호</th>
+        <th scope="col" id="mb_list_tel">마지막 로그인ip</th>
         <th scope="col" id="mb_list_join"><?php echo subject_sort_link('mb_datetime', '', 'desc') ?>가입일</a></th>
         <th scope="col" id="mb_list_point"><?php echo subject_sort_link('mb_point', '', 'desc') ?> 포인트</a></th>
 		<?php if($is_membership) { ?>
@@ -185,6 +187,7 @@ $colspan = ($is_membership) ? 17 : 16;
 
         $leave_date = $row['mb_leave_date'] ? $row['mb_leave_date'] : date('Ymd', G5_SERVER_TIME);
         $intercept_date = $row['mb_intercept_date'] ? $row['mb_intercept_date'] : date('Ymd', G5_SERVER_TIME);
+		$passive_certify = ($row['mb_email_certify'] == '0000-00-00 00:00:00') ? G5_TIME_YMDHIS : $row['mb_email_certify'];
 
         $mb_nick = get_sideview($row['mb_id'], get_text($row['mb_nick']), $row['mb_email'], $row['mb_homepage']);
 
@@ -264,7 +267,7 @@ $colspan = ($is_membership) ? 17 : 16;
             <input type="radio" name="mb_certify[<?php echo $i; ?>]" value="hp" id="mb_certify_hp_<?php echo $i; ?>" <?php echo $row['mb_certify']=='hp'?'checked':''; ?>>
             <label for="mb_certify_hp_<?php echo $i; ?>">휴대폰</label>
         </td>
-        <td headers="mb_list_mailc"><?php echo preg_match('/[1-9]/', $row['mb_email_certify'])?'<span class="txt_true">Yes</span>':'<span class="txt_false">No</span>'; ?></td>
+        <td headers="mb_list_mailc"><input type="checkbox" name="mb_email_certify[<?php echo $i; ?>]" <?php echo ($row['mb_email_certify'] == '0000-00-00 00:00:00')?'':'checked'; ?> value="<?php echo $passive_certify ?>" id="mb_email_certify_<?php echo $i ?>"></td>
         <td headers="mb_list_open">
             <label for="mb_open_<?php echo $i; ?>" class="sound_only">정보공개</label>
             <input type="checkbox" name="mb_open[<?php echo $i; ?>]" <?php echo $row['mb_open']?'checked':''; ?> value="1" id="mb_open_<?php echo $i; ?>">
@@ -279,7 +282,7 @@ $colspan = ($is_membership) ? 17 : 16;
             else echo "정상";
             ?>
         </td>
-        <td headers="mb_list_mobile" class="td_tel"><?php echo get_text($row['mb_hp']); ?></td>
+        <td headers="mb_list_mobile" class="td_tel"><?php echo $row['mb_ip']; ?></td>
         <td headers="mb_list_lastcall" class="td_date"><?php echo substr($row['mb_today_login'],2,8); ?></td>
         <td headers="mb_list_grp" class="td_numsmall"><?php echo $group ?></td>
 		<?php if($is_membership) { ?>
@@ -313,7 +316,7 @@ $colspan = ($is_membership) ? 17 : 16;
         <td headers="mb_list_auth" class="td_mbstat">
             <?php echo get_member_level_select("mb_level[$i]", 1, $member['mb_level'], $row['mb_level']) ?>
         </td>
-        <td headers="mb_list_tel" class="td_tel"><?php echo get_text($row['mb_tel']); ?></td>
+        <td headers="mb_list_tel" class="td_tel"><?php echo $row['mb_login_ip']; ?></td>
         <td headers="mb_list_join" class="td_date"><?php echo substr($row['mb_datetime'],2,8); ?></td>
         <td headers="mb_list_point" class="td_num"><a href="point_list.php?sfl=mb_id&amp;stx=<?php echo $row['mb_id'] ?>"><?php echo number_format($row['mb_point']) ?></a></td>
 		<?php if($is_membership) { ?>

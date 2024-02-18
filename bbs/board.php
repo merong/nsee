@@ -132,7 +132,6 @@ if (isset($wr_id) && $wr_id) {
         }
     }
 
-
     // 한번 읽은글은 브라우저를 닫기전까지는 카운트를 증가시키지 않음
     $ss_name = 'ss_view_'.$bo_table.'_'.$wr_id;
     if (!get_session($ss_name))
@@ -322,9 +321,8 @@ if (isset($wr_id) && $wr_id) {
 
 // 전체목록보이기 사용이 "예" 또는 wr_id 값이 없다면 목록을 보임
 //if ($board['bo_use_list_view'] || empty($wr_id))
-if ($is_show_list) {
-    include_once(G5_BBS_PATH . '/list.php');
-}
+if ($is_show_list)
+    include_once (G5_BBS_PATH.'/list.php');
 
 include_once(G5_BBS_PATH.'/board_tail.php');
 

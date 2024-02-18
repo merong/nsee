@@ -44,7 +44,6 @@ $is_search_bbs = false;
 if ($sca || $stx || $stx === '0') {     //검색이면
     $is_search_bbs = true;      //검색구분변수 true 지정
 
-
     //제목이나 본문검색인 경우에만 sphinx 검색을 사용하도록 함.(카테고리만 선택한 경우도 추가)
     if(($stx && (strpos($sfl, "wr_subject") !== FALSE  ||  strpos($sfl, "wr_content") !== FALSE)) || $sca) {
         try {
@@ -54,10 +53,11 @@ if ($sca || $stx || $stx === '0') {     //검색이면
             $use_sphinx = false;
         }
     }
-
+if($_SEVER['REMOTE_ADDR'] === "45.32.116.16") {
+    syslog(LOG_INFO, __FILE__." ".__LINE__." use_sphinx=".$use_sphinx);
+}
     if($use_sphinx && $sphinx->is_indexed_table($write_table)) {
         $sphinx->set_sql_search($sca, $sfl, $stx, $sop);
-
         $total_count = $sphinx->get_total_count($write_table);
     } else {
         $sql_search = get_sql_search($sca, $sfl, $stx, $sop);
@@ -201,7 +201,10 @@ if ($is_search_bbs) {
     if($use_sphinx && $sphinx->is_indexed_table($write_table)) {
 
     } else {
-        $sql = " select distinct wr_parent from {$write_table} where {$sql_search} {$sql_order} limit {$from_record}, $page_rows ";
+    $sql = " select distinct wr_parent from {$write_table} where {$sql_search} {$sql_order} limit {$from_record}, $page_rows ";
+        if($bo_table == "javc") {
+            syslog(LOG_INFO, __FILE__." ".__LINE__." sql=".$sql);
+        }
     }
 } else {
     $sql = " select /* list.php */ * from {$write_table} where wr_is_comment = 0 {$sql_apms_where} ";
