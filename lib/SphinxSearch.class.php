@@ -195,6 +195,7 @@ class SphinxSearch {
                                 OPTION max_matches={$max_matches}  
                      ";
 
+
         $result = mysqli_query($this->sph_connect, $sql);
         for ($i=0; $row=mysqli_fetch_array($result); $i++) {
             $this->result_items[] = $row;

@@ -25,7 +25,7 @@ $wshid = 'lte-sbox';
 	<div class="main-box">
 		<div class="main-head">
 <!--		<div style="width:100%; height:260px; line-height:260px; text-align:center; background:#ffffff;"> -->
-		<a href="http://mex-see04.com">
+		<a href="http://mex-see05.com">
 		<img src="/imgs/a_mex.gif" width="100%" height="100%"></a>
 		</div>
 	</div>

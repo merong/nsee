@@ -1545,9 +1545,17 @@ function get_sideview($mb_id, $name='', $email='', $homepage='')
     }
     if($mb_id)
 		$str2 .= "<a href=\"".G5_BBS_URL."/new.php?mb_id=".$mb_id."\" class=\"link_new_page\" onclick=\"check_goto_new(this.href, event);\">전체게시물</a>\n";
+    if($is_admin == "board" && $mb_id) { // 그룹관리자일때
+        $str2 .= "<a href=\"".G5_ADMIN_URL."/member_board_delete.php?bo_table=".$_GET['bo_table']."&amp;mb_id=".$mb_id."&amp;page=".$_GET['page']."&amp;sca=".$_GET['sca']."&amp;sop=".$_GET['sop']."&amp;sfl=".$_GET['sfl']."&amp;stx=".$_GET['stx']."\" onclick=\"return confirm('{$name} 회원을 접근차단하고, 작성된 게시글 전체를 삭제하시겠습니까?')\">회원차단+글삭제</a>\n";
+    }
+    if($is_admin == "group" && $mb_id) { // 그룹관리자일때
+        $str2 .= "<a href=\"".G5_ADMIN_URL."/member_board_delete.php?bo_table=".$_GET['bo_table']."&amp;mb_id=".$mb_id."&amp;page=".$_GET['page']."&amp;sca=".$_GET['sca']."&amp;sop=".$_GET['sop']."&amp;sfl=".$_GET['sfl']."&amp;stx=".$_GET['stx']."\" onclick=\"return confirm('{$name} 회원을 접근차단하고, 작성된 게시글 전체를 삭제하시겠습니까?')\">회원차단+글삭제</a>\n";
+    }
     if($is_admin == "super" && $mb_id) {
         $str2 .= "<a href=\"".G5_ADMIN_URL."/member_form.php?w=u&amp;mb_id=".$mb_id."\" target=\"_blank\">회원정보변경</a>\n";
         $str2 .= "<a href=\"".G5_ADMIN_URL."/point_list.php?sfl=mb_id&amp;stx=".$mb_id."\" target=\"_blank\">포인트내역</a>\n";
+        $str2 .= "<a href=\"".G5_ADMIN_URL."/member_board_delete.php?bo_table=".$_GET['bo_table']."&amp;mb_id=".$mb_id."&amp;page=".$_GET['page']."&amp;sca=".$_GET['sca']."&amp;sop=".$_GET['sop']."&amp;sfl=".$_GET['sfl']."&amp;stx=".$_GET['stx']."&type=1\" onclick=\"return confirm('{$name} 회원차단하고, 작성된 게시글 전체를 삭제하시겠습니까?')\">회원차단+글삭제</a>\n";
+        $str2 .= "<a href=\"".G5_ADMIN_URL."/member_board_delete.php?bo_table=".$_GET['bo_table']."&amp;mb_id=".$mb_id."&amp;page=".$_GET['page']."&amp;sca=".$_GET['sca']."&amp;sop=".$_GET['sop']."&amp;sfl=".$_GET['sfl']."&amp;stx=".$_GET['stx']."&type=2\" onclick=\"return confirm('{$name} 회원삭제하고, 작성된 게시글 전체를 삭제하시겠습니까?')\">회원삭제+글삭제</a>\n";
     }
     $str2 .= "</span>\n";
     $str .= $str2;

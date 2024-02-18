@@ -67,9 +67,10 @@ if (!defined('_GNUBOARD_')) exit; // can not connect self
 		</div>
 
 	<?php } else { // logout status ?>
-
+		<!--
 		<form id="miso_sidelogin" name="miso_sidelogin" method="post" action="<?php echo $at_href['login_check'];?>" autocomplete="off" class="form" onsubmit="return miso_sidelogin_form(this);">
 		<input type="hidden" name="url" value="<?php echo $urlencode; ?>">
+		
 			<div class="media no-margin en">
 				<div class="sidebar-form pull-right" style="width:60px; margin:10px 10px 0px 0px;">
 					<button type="submit" class="btn btn-flat btn-block" tabindex="43" style="height:78px;"><i class="fa fa-power-off fa-2x"></i></button> 
@@ -93,16 +94,21 @@ if (!defined('_GNUBOARD_')) exit; // can not connect self
 					</div>
 				</div>
 			</div>
+	-->
 			<ul class="sidebar-list" style="padding:0px; margin:10px 10px 5px; letter-spacing:-1px;" >
 				<li class="sidebar-text">
-					<label class="cursor pull-left">
-						<input type="checkbox" name="auto_login" value="1" id="remember_me" class="remember-me"> &nbsp;Auto login
-					</label>
-					<span class="pull-right">
+					
+				
+
+					<span class="">
+						<a href="<?php echo G5_BBS_URL ?>/login.php">
+							<span class="sidebar-text">Login</span>
+						</a>
+						&nbsp;&nbsp;|&nbsp;&nbsp;
 						<a href="<?php echo $at_href['reg'];?>">
 							<span class="sidebar-text">Sign up</span>
 						</a>
-						&nbsp;|&nbsp;
+						&nbsp;&nbsp;|&nbsp;&nbsp;
 						<a href="<?php echo $at_href['lost'];?>" class="win_password_lost">
 							<span class="sidebar-text">Find my info</span>
 						</a>
@@ -110,7 +116,7 @@ if (!defined('_GNUBOARD_')) exit; // can not connect self
 					<div class="clearfix"></div>
 				</li>
 			</ul>	
-		</form>
+		<!--</form>-->
 	<?php } ?>
 
 </div>

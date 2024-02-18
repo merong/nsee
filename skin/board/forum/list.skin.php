@@ -31,35 +31,36 @@ $list_cnt = count($list);
 
 ?>
 <!-- best post-->
+
 <div class="div-title-wrap">
-	<div class="div-title"><b>Best Recommend</b></div>
-	<div class="div-sep-wrap">
-		<div class="div-sep sep-bold"></div>
-	</div>
+    <div class="div-title"><b>Best Recommend</b></div>
+    <div class="div-sep-wrap">
+        <div class="div-sep sep-bold"></div>
+    </div>
+</div>
+<div class="div-tab-top tabs">
+    <ul class="nav nav-tabs nav-justified">
+        <li class="active"><a href="#tab1-1" data-toggle="tab"> Daily</a>
+        </li>
+        <li><a href="#tab1-2" data-toggle="tab"> Weekly</a></li>
+        <li><a href="#tab1-3" data-toggle="tab"> Monthly</a></li>
+
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="tab1-1">
+            <?php echo apms_addon('best-post', 'best1'); ?>
+        </div>
+        <div class="tab-pane" id="tab1-2">
+            <?php echo apms_addon('best-post', 'best2'); ?>
+        </div>
+        <div class="tab-pane" id="tab1-3">
+            <?php echo apms_addon('best-post', 'best3'); ?>
+        </div>
+
+    </div>
 </div>
 
-<div id="misc_tab" class="div-tab tabs swipe-tab trans-top">
-	<div class="main-tab bg-white">
-		<ul class="nav nav-tabs" data-toggle="tab-hover">
-						<li class="active">
-						<a href="best_daily" data-toggle="tab">Daily</a></li>
-						<li><a href="best_Weekly" data-toggle="tab">Weekly</a></li>
-						<li><a href="best_Monthly" data-toggle="tab">Monthly</a></li>
-						
-					</ul>
-				</div>
-				<div class="tab-content">
-					<div class="tab-pane active" id="best_daily">
-						<?php echo apms_addon('best-post', 'best1'); ?>
-					</div>
-					<div class="tab-pane" id="best_Weekly">
-						<?php echo apms_addon('best-post', 'best2'); ?>
-					</div>
-					<div class="tab-pane" id="best_Monthly">
-						<?php echo apms_addon('best-post', 'best3'); ?>
-					</div>
-				</div><br>
-</div>
+<!--best-addon-->
 
 
 <section class="board-list<?php echo (G5_IS_MOBILE) ? ' font-14' : '';?>"> 

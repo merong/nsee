@@ -32,15 +32,15 @@ $wshid = 'lte-box';
 						if(G5_IS_MOBILE) { //mobile title
 							echo '<div class="'.$classname.'">
 								<div style="width:100%; height:70px; line-height:50px; text-align:center; background:#FFFFFF; style="margin:0 auto;">
-								<a href="/bbs/board.php?bo_table=noti&wr_id=39661" target="_blank"><img align="left" src="/imgs/empty.png" width="49.7%" height="100%"></a>
-								<a href="https://hanstar1004.com" target="_blank"><img align="right" src="/imgs/hanstar_main.gif" width="49.7%" height="100%"></a>
+								<a href="http://bet-10s.com" target="_blank"><img align="left" src="/imgs/10sec_310_1.gif" width="49.7%" height="100%"></a>
+								<a href="" target="_blank"><img align="right" src="/imgs/empty.png" width="49.7%" height="100%"></a>
 								</div>
 							</div>';
 						} else { //PC title
 							echo '<div class="'.$classname.'">
 								<div style="width:100%; height:100px; line-height:20px; text-align:center; background:#FFFFFF; style="margin:0 auto;">
-								<a href="/bbs/board.php?bo_table=noti&wr_id=39661" target="_blank"><img align="left" src="/imgs/empty.png" width="49.7%" height="100%"></a>
-								<a href="https://hanstar1004.com" target="_blank"><img align="right" src="/imgs/hanstar_main.gif" width="49.7%" height="100%"></a>
+								<a href="http://bet-10s.com" target="_blank"><img align="left" src="/imgs/10sec_310_1.gif" width="49.7%" height="100%"></a>
+								<a href="" target="_blank"><img align="right" src="/imgs/empty.png" width="49.7%" height="100%"></a>
 								</div>
 							</div>';
 						}
@@ -161,7 +161,7 @@ $wshid = 'lte-box';
 				<div class="main-box">
 					<div class="main-head">
 						<div style="width:100%; height:260px; line-height:260px; text-align:center; background:#FFFFFF;">
-						<a href="http://mex-see04.com">
+						<a href="http://mex-see05.com">
 						<img src="/imgs/a_mex.gif" width="100%" height="100%"></a>
 						</div>
 					</div>

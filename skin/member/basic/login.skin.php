@@ -1,5 +1,6 @@
 <?php
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
 
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
 add_stylesheet('<link rel="stylesheet" href="'.$skin_url.'/style.css" media="screen">', 0);
@@ -27,16 +28,17 @@ if($header_skin)
 					<input type="password" name="mb_password" id="login_pw" required class="form-control input-sm" size="20" maxLength="20">
 					<span class="fa fa-lock form-control-feedback"></span>
 				</div>
+				
 				<div class="row">
+					
 					<div class="col-xs-6">
-						<label class="checkbox-inline remember-me">
-							<input type="checkbox" name="auto_login" id="login_auto_login"> 자동로그인
-						</label>
-					</div>
-					<div class="col-xs-6">
-						<button type="submit" class="btn btn-color pull-right"><i class="fa fa-sign-in fa-lg"></i> 로그인</button>
+						<button type="submit" class="btn btn-color"><i class="fa fa-sign-in fa-lg"></i> 로그인</button>
 					</div>
 				</div>
+				<br>
+				<!--캡차 추가-->
+        <?php echo captcha_html(); ?> 
+        
 			</form>
 			<?php if($config['cf_social_login_use']) { //소셜 로그인 사용시
 				$social_pop_once = false;
@@ -46,7 +48,7 @@ if($header_skin)
 				//새창을 사용한다면
 				if( G5_SOCIAL_USE_POPUP ) {
 					$self_url = G5_SOCIAL_LOGIN_URL.'/popup.php';
-				}
+				}ㅊㄴ
 			?>
 				<div id="sns_login" class="sns-wrap-over">
 					<div class="sns-wrap">

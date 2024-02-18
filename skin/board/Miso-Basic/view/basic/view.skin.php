@@ -187,6 +187,9 @@ $view_subject = get_text($view['wr_subject']);
 					}
 				?>
 
+				<?php //downside video ads
+				echo stripslashes($board['bo_content_tail']) ?>
+
 				<?php if ($good_href || $nogood_href) { ?>
 					<div class="print-hide view-good-box">
 						<?php if ($good_href) { ?>

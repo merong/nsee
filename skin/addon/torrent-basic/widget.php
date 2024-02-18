@@ -32,7 +32,7 @@ for($i=0; $i < $torrent_cnt; $i++) {
 			<?php } ?>
 		</div>
 		<ul class="list-group">
-			<li class="list-group-item en font-14 break-word"><i class="fa fa-magnet"></i> <?php echo $torrent[$i]['magnet'];?></li>
+			
 			<li class="list-group-item break-word">
 				<div class="text-muted<?php echo $view_font;?>">
 					<?php for ($j=0;$j < count($torrent[$i]['tracker']);$j++) { ?>

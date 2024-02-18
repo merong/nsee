@@ -106,16 +106,30 @@ if (typeof(SIDEVIEW_JS) == 'undefined') { // 한번만 실행
 		// 전체게시물
         if (mb_id)
             this.insertTail("new", "<a href=\""+g5_bbs_url+"/new.php?mb_id="+mb_id+"\""+pim_target+" rel=\"nofollow\" class=\"link_new_page\" onclick=\"check_goto_new(this.href, event);\">"+aslang[8]+"</a>");
-
+        
+        // 게시판관리자일 경우
+        if (g5_is_admin == "board") {
+            if (mb_id) {
+                this.insertTail("member_del1", "<a href=\""+g5_admin_url+"/member_board_delete.php?bo_table="+g5_bo_table+"&mb_id="+mb_id+"&type=1\" onclick='return confirm(\""+name+" 회원을 접근차단하고, 작성된 게시글 전체를 삭제하시겠습니까?\")' style='letter-spacing:-1px;'>회원차단+글삭제</a>");
+            }
+        }
+        // 그룹관리자일 경우
+        if (g5_is_admin == "group") {
+            if (mb_id) {
+                this.insertTail("member_del1", "<a href=\""+g5_admin_url+"/member_board_delete.php?bo_table="+g5_bo_table+"&mb_id="+mb_id+"&type=2\" onclick='return confirm(\""+name+" 회원을 접근차단하고, 작성된 게시글 전체를 삭제하시겠습니까?\")' style='letter-spacing:-1px;'>회원삭제+글삭제</a>");
+            }
+        }
         // 최고관리자일 경우
         if (g5_is_admin == "super") {
             // 포인트내역과 1:1문의
             if (mb_id) {
                 this.insertTail("qna", "<a href=\""+g5_bbs_url+"/qalist.php?qmb="+mb_id+"\" rel=\"nofollow\">"+aslang[40]+"</a>");
-				this.insertTail("point", "<a href=\""+g5_admin_url+"/point_list.php?sfl=mb_id&stx="+mb_id+"\" target=\"_blank\" rel=\"nofollow\">"+aslang[9]+"</a>");
+                this.insertTail("point", "<a href=\""+g5_admin_url+"/point_list.php?sfl=mb_id&stx="+mb_id+"\" target=\"_blank\" rel=\"nofollow\">"+aslang[9]+"</a>");
                 this.insertTail("modify", "<a href=\""+g5_admin_url+"/member_form.php?w=u&mb_id="+mb_id+"\" target=\"_blank\" rel=\"nofollow\">"+aslang[10]+"</a>");
-			}
-		}
+                this.insertTail("member_del1", "<a href=\""+g5_admin_url+"/member_board_delete.php?bo_table="+g5_bo_table+"&mb_id="+mb_id+"&type=1\" onclick='return confirm(\""+name+" 회원차단하고, 작성된 게시글 전체를 삭제하시겠습니까?\")' style='letter-spacing:-1px;'>회원차단+글삭제</a>");
+                this.insertTail("member_del2", "<a href=\""+g5_admin_url+"/member_board_delete.php?bo_table="+g5_bo_table+"&mb_id="+mb_id+"&type=2\" onclick='return confirm(\""+name+" 회원삭제하고, 작성된 게시글 전체를 삭제하시겠습니까?\")' style='letter-spacing:-1px;'>회원삭제+글삭제</a>");
+            }
+        }
     }
 
     function showLayer() {
